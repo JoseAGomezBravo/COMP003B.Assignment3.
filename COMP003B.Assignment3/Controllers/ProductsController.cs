@@ -1,6 +1,5 @@
 ﻿using COMP003B.Assignment3_.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace COMP003B.Assignment3_.Controllers
 {
@@ -12,11 +11,16 @@ namespace COMP003B.Assignment3_.Controllers
             return View(_products);
         }
 
+        public IActionResult Create()
+        {
+            return View();
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Create(Product product)
         {
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 if (!_products.Any(s => s.Id == product.Id))
                 {
@@ -65,6 +69,7 @@ namespace COMP003B.Assignment3_.Controllers
                 
                     existingProduct.Id = product.Id;
                     existingProduct.Name = product.Name;
+                    existingProduct.Price= product.Price;
                 }
                 return RedirectToAction(nameof(Index));
             }
@@ -81,7 +86,7 @@ namespace COMP003B.Assignment3_.Controllers
 
         var product = _products.FirstOrDefault(s => s.Id == id);
 
-            if (product!= null) 
+            if (product == null) 
             {
                 return NotFound();
             }
@@ -94,7 +99,7 @@ namespace COMP003B.Assignment3_.Controllers
         public IActionResult DeleteComfirmed(int id) 
         {
         var product = _products.FirstOrDefault(s => s.Id == id);
-            if (product!= null) 
+            if (product != null) 
             {
             _products.Remove(product);
             }
